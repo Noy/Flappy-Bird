@@ -111,7 +111,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Creating the collision types
         bird.physicsBody!.contactTestBitMask = State.OBJECT.rawValue
-        bird.physicsBody!.categoryBitMask = State.OBJECT.rawValue
+        bird.physicsBody!.categoryBitMask = State.BIRD.rawValue
         bird.physicsBody?.collisionBitMask = State.OBJECT.rawValue
         // Add the bird to the screen
         self.addChild(bird)
