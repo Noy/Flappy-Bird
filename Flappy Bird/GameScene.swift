@@ -8,6 +8,8 @@
 
 import SpriteKit
 import GameplayKit
+import AVFoundation
+
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -23,6 +25,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel = SKLabelNode()
     var gameOverLabel = SKLabelNode()
     var timer = Timer()
+    var player = AVAudioPlayer()
+    let win = Bundle.main.path(forResource: "score", ofType: "mp3")
+    let woosh = Bundle.main.path(forResource: "woosh", ofType: "mp3")
+    let hit = Bundle.main.path(forResource: "hit", ofType: "mp3")
     
     func make() {
         let movePipes = SKAction.move(by: CGVector(dx: -2 * self.frame.width, dy: 0), duration: TimeInterval(self.frame.width / 100))
@@ -149,7 +155,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if contact.bodyA.categoryBitMask == State.SPACE_AREA.rawValue || contact.bodyB.categoryBitMask == State.SPACE_AREA.rawValue {
                 score += 1
                 scoreLabel.text = String(score)
+                do {
+                    try player = AVAudioPlayer(contentsOf: URL(fileURLWithPath: win!))
+                    player.play()
+                }catch{
+                    // handle exception
+                }
             } else {
+                do {
+                    try player = AVAudioPlayer(contentsOf: URL(fileURLWithPath: hit!))
+                    player.play()
+                }catch{
+                    // handle exception
+                }
                 self.speed = 0
                 self.gameOver = true
                 timer.invalidate()
@@ -165,6 +183,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if gameOver == false {
+//            do {
+//                //try player = AVAudioPlayer(contentsOf: URL(fileURLWithPath: woosh!))
+//                //player.play()
+//            }catch{
+//                // handle exception
+//            }
             bird.physicsBody!.isDynamic = true
             bird.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
             bird.physicsBody!.applyImpulse(CGVector(dx: 0, dy: 50))
